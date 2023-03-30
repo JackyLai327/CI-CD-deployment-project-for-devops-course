@@ -24,10 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Run linter
-        run: npm run test-lint --prefix src > src/lint-results.xml
+        run: npm run test-lint --prefix src > src/reports/lint-reports.xml
       - if: success() || failure()
         name: upload linting results
         uses: actions/upload-artifact@v3
         with:
           name: lint-results
-          path: src/lint-results.xml
+          path: src/reports/lint-reports.xml
