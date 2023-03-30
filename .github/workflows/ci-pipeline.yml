@@ -31,4 +31,3 @@ jobs:
         with:
           name: lint-results
           path: src/lint-results.xml
-          working-directory: src
