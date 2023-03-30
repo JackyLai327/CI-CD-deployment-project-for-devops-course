@@ -24,4 +24,4 @@ jobs:
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Run linter
-        run: npm run lint --prefix src
+        run: npm run test-lint --prefix src
