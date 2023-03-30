@@ -25,7 +25,7 @@ jobs:
         run: npm clean-install --prefix src
       - name: Run linter
         run: npm run test-lint --prefix src
-      - if: success() || fail()
+      - if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: linting-results-${{ github.sha }}
