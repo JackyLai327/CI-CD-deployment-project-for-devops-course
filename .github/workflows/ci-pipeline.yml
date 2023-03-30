@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - feature/*
   pull_request:
     branches:
       - main
@@ -23,4 +24,4 @@ jobs:
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Run linter
-        run: npm run lint
+        run: npm run lint --prefix src
