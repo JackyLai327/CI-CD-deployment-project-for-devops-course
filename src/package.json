@@ -9,7 +9,7 @@
     "test-unit": "jest --ci tests/unit --coverage --collectCoverageForm='./src/tests/unit/**' --forceExit",
     "test-integration": "jest --ci tests/integration --coverage --forceExit",
     "test-e2e": "npx playwright test",
-    "pack": "npm pack"
+    "pack": "npm pack --tarball=../notes.tar.gz"
   },
   "keywords": [],
   "author": "",
