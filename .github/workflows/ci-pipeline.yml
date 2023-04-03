@@ -29,7 +29,7 @@ jobs:
         name: Upload linting results
         uses: actions/upload-artifact@v3
         with:
-          name: lint-results
+          name: lint-results-${{ github.sha }}
           path: reports/lint-reports.xml
 
   unit-tests:
@@ -49,5 +49,5 @@ jobs:
         name: Upload unit test results
         uses: actions/upload-artifact@v3
         with:
-          name: unit-test-results
+          name: unit-test-results-${{ github.sha }}
           path: reports/unit-test-reports.xml
