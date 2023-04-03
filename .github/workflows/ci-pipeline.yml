@@ -73,12 +73,6 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
-      # - if: github.ref == 'refs/heads/main'
-      #   name: Download deployable artifact
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: deployable-artifact-${{ github.sha }}
-      #     path: src
       - name: Start MongoDB container
         uses: isbang/compose-action@v1.4.1
         with:
@@ -86,7 +80,7 @@ jobs:
       - name: Run integration tests
         run: npm run test-integration --prefix src > reports/integration-test-reports.xml
       - name: Stop MongoDB container
-        run: docker stop mongo
+        run: docker stop db
       - if: success() || failure()
         name: Upload integration test results
         uses: actions/upload-artifact@v3
