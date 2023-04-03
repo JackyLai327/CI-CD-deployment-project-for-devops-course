@@ -54,7 +54,7 @@ jobs:
           path: reports/unit-test-reports.xml
       - if: github.ref == 'refs/heads/main' && (success() || failure())
         name: Create deployable artifact
-        run: npm pack --prefix src
+        run: npm-pack --prefix src
       - if: github.ref == 'refs/heads/main' && (success() || failure())
         name: Upload deployable artifact
         uses: actions/upload-artifact@v3
