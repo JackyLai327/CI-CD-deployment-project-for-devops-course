@@ -80,7 +80,11 @@ jobs:
       #     name: deployable-artifact-${{ github.sha }}
       #     path: src
       - name: Start MongoDB container
-        run: docker run --name db -p 27017:27017 -d mongo:4.0
+        uses: docker/compose-cli-action@v1.0.31
+        with:
+          compose-file: docker-compose.yml
+          compose-project-name: notes-app-ci-pipeline
+          command: up -d db
       - name: Run integration tests
         run: npm run test-integration --prefix src > reports/integration-test-reports.xml
       - name: Stop MongoDB container
