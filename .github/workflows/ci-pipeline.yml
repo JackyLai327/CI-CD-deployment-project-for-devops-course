@@ -73,7 +73,8 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
-      - name: Download deployable artifact
+      - if: github.ref == 'refs/heads/main'
+        name: Download deployable artifact
         uses: actions/download-artifact@v3
         with:
           name: deployable-artifact-${{ github.sha }}
