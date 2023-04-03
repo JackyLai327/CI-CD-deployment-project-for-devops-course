@@ -32,4 +32,22 @@ jobs:
           name: lint-results
           path: reports/lint-reports.xml
 
-  
+  unit-tests:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+      - name: Install dependencies
+        run: npm clean-install --prefix src
+      - name: Run unit tests
+        run: npm run test-unit --prefix src > reports/unit-test-reports.xml
+      - if: success() || failure()
+        name: Upload unit test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: unit-test-results
+          path: reports/unit-test-reports.xml
