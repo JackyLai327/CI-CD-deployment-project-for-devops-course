@@ -20,4 +20,16 @@ describe('mockingoose', () => {
             expect(result).toBe(undefined);
         });
     })
+
+    describe("Failure Scenario", () => {
+        it('Failure Scenario', async () => {
+            const todo = new Note({
+                title: "Failure",
+                description: "This will fail" // "This can't be blank"
+            });
+
+            const result = await todo.validateSync();
+            expect(result).not.toBe(undefined);
+        });
+    })
 })
