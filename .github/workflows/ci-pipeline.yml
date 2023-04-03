@@ -73,14 +73,14 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
-      - if: github.ref == 'refs/heads/main'
-        name: Download deployable artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: deployable-artifact-${{ github.sha }}
-          path: src
+      # - if: github.ref == 'refs/heads/main'
+      #   name: Download deployable artifact
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: deployable-artifact-${{ github.sha }}
+      #     path: src
       - name: Start MongoDB container
-        run: docker run --name mongo -p 27017:27017 -d mongo:latest
+        run: docker run --name db -p 27017:27017 -d mongo:4.0
       - name: Run integration tests
         run: npm run test-integration --prefix src > reports/integration-test-reports.xml
       - name: Stop MongoDB container
