@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - main
+      - feature/*
 
 jobs:
 
@@ -51,3 +52,12 @@ jobs:
         with:
           name: unit-test-results-${{ github.sha }}
           path: reports/unit-test-reports.xml
+      - if: github.ref == 'refs/heads/main' && (success() || failure())
+        name: Create deployable artifact
+        run: npm pack --prefix src
+      - if: github.ref == 'refs/heads/main' && (success() || failure())
+        name: Upload deployable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployable-artifact-${{ github.sha }}
+          path: src/*.tgz
