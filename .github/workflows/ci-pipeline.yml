@@ -96,6 +96,8 @@ jobs:
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: docker-compose.yml
+      - name: Install pm2
+        run: npm install -g pm2
       - name: Start application at background
         run: pm2 start npm --name "notes" -- start
       - name: Run end-to-end tests
