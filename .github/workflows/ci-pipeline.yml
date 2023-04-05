@@ -44,6 +44,7 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
+        continue-on-error: false
       - name: Run unit tests
         run: npm run test-unit --prefix src > reports/unit-test-reports.xml
       - if: success() || failure()
@@ -79,6 +80,7 @@ jobs:
           compose-file: docker-compose.yml
       - name: Run integration tests
         run: npm run test-integration --prefix src > reports/integration-test-reports.xml
+        continue-on-error: false
       - name: Stop MongoDB container
         run: docker stop db
       - if: success() || failure()
