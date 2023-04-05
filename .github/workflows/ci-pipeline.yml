@@ -97,7 +97,7 @@ jobs:
         with:
           compose-file: docker-compose.yml
       - name: Start application
-        run: npm start 
+        run: npm start --prefix src
 
   end-to-end-tests:
     needs: start-application
@@ -139,12 +139,6 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
-      - if: success() || failure()
-        name: Upload deployable artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: deployable-artifact-${{ github.sha }}
-          path: src/*.tgz
       - if: github.ref == 'refs/heads/main' && (success() || failure())
         name: Create deployable artifact
         run: npm run pack --prefix src
