@@ -96,11 +96,13 @@ jobs:
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: docker-compose.yml
-      - name: Start application
-        run: npm run start --prefix src
+      - name: Start application at background
+        run: pm2 start npm --name "notes" -- start
       - name: Run end-to-end tests
         run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
         continue-on-error: false
+      - name: Stop application
+        run: pm2 stop notes
       - name: Stop MongoDB container
         run: docker stop db
       - if: success() || failure()
