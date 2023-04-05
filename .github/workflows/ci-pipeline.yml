@@ -53,15 +53,6 @@ jobs:
         with:
           name: unit-test-results-${{ github.sha }}
           path: reports/unit-test-reports.xml
-      - if: github.ref == 'refs/heads/main' && (success() || failure())
-        name: Create deployable artifact
-        run: npm run pack --prefix src
-      - if: github.ref == 'refs/heads/main' && (success() || failure())
-        name: Upload deployable artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: deployable-artifact-${{ github.sha }}
-          path: src/*.tgz
 
   integration-tests:
     needs: unit-tests
@@ -105,6 +96,8 @@ jobs:
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: docker-compose.yml
+      - name: Start application
+        run: npm run start --prefix src
       - name: Run end-to-end tests
         run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
         continue-on-error: false
@@ -116,3 +109,30 @@ jobs:
         with:
           name: end-to-end-test-results-${{ github.sha }}
           path: reports/end-to-end-test-reports.xml
+
+  build:
+    needs: end-to-end-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+      - name: Install dependencies
+        run: npm clean-install --prefix src
+      - if: success() || failure()
+        name: Upload deployable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployable-artifact-${{ github.sha }}
+          path: src/*.tgz
+      - if: github.ref == 'refs/heads/main' && (success() || failure())
+        name: Create deployable artifact
+        run: npm run pack --prefix src
+      - if: github.ref == 'refs/heads/main' && (success() || failure())
+        name: Upload deployable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployable-artifact-${{ github.sha }}
+          path: src/*.tgz
