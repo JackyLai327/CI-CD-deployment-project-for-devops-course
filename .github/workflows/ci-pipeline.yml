@@ -97,11 +97,10 @@ jobs:
         with:
           compose-file: docker-compose.yml
       - name: Start application
-        run: npm start &
-        background: true
+        run: npm start 
 
   end-to-end-tests:
-    needs: integration-tests
+    needs: start-application
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
