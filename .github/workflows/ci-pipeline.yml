@@ -81,7 +81,7 @@ jobs:
           name: integration-test-results-${{ github.sha }}
           path: reports/integration-test-reports.xml
 
-  start-application:
+  end-to-end-tests:
     needs: integration-tests
     runs-on: ubuntu-latest
     steps:
@@ -92,33 +92,17 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
+      - name: Install Playwright
+        run: npx playwright install --with-deps
       - name: Start MongoDB container
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: docker-compose.yml
-      - name: Start application
-        run: npm start --prefix src
-
-  end-to-end-tests:
-    needs: start-application
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: '17'
-      - name: Install dependencies
-        run: npm clean-install --prefix src
-      # - name: Start MongoDB container
-      #   uses: isbang/compose-action@v1.4.1
-      #   with:
-      #     compose-file: docker-compose.yml
       - name: Run end-to-end tests
         run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
         continue-on-error: false
-      - name: Stop application
-        run: npm stop
       - name: Stop MongoDB container
         run: docker stop db
       - if: success() || failure()
@@ -139,6 +123,12 @@ jobs:
           node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
+      - if: success() || failure()
+        name: Upload deployable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployable-artifact-${{ github.sha }}
+          path: src/*.tgz
       - if: github.ref == 'refs/heads/main' && (success() || failure())
         name: Create deployable artifact
         run: npm run pack --prefix src
