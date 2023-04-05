@@ -89,3 +89,30 @@ jobs:
         with:
           name: integration-test-results-${{ github.sha }}
           path: reports/integration-test-reports.xml
+
+  end-to-end-tests:
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 17.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17'
+      - name: Install dependencies
+        run: npm clean-install --prefix src
+      - name: Start MongoDB container
+        uses: isbang/compose-action@v1.4.1
+        with:
+          compose-file: docker-compose.yml
+      - name: Run end-to-end tests
+        run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
+        continue-on-error: false
+      - name: Stop MongoDB container
+        run: docker stop db
+      - if: success() || failure()
+        name: Upload end-to-end test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: end-to-end-test-results-${{ github.sha }}
+          path: reports/end-to-end-test-reports.xml
