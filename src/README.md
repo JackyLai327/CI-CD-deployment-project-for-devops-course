@@ -3,7 +3,7 @@
 The Notes app uses the following technologies and javascript libraries:
 ```bash
 $ node --version
-v17.6.0
+v18.15.0
 
 $ npm list
 notes
@@ -20,7 +20,7 @@ notes
 ├── jest@27.5.1
 ├── method-override@3.0.0
 ├── mockingoose@2.15.2
-├── mongoose@6.2.6
+├── mongoose@8.15.0
 └── supertest@6.2.2
 ```
 

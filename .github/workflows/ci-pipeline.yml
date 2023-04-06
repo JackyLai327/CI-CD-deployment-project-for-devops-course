@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Run linter
@@ -38,10 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
         continue-on-error: false
@@ -68,10 +68,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Start MongoDB container
@@ -95,18 +95,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
+      - name: Install playwright
+        run: npx playwright install
+      - name: Install browsers
+        run: npm playwright install-deps
       - name: Start MongoDB container
         uses: isbang/compose-action@v1.4.1
         with:
           compose-file: docker-compose.yml
-      - name: Start application
-        run: npm run start --prefix src &
       - name: Run end-to-end tests
         run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
         env:
@@ -128,10 +130,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - if: github.ref == 'refs/heads/main' && (success() || failure())
