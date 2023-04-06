@@ -75,14 +75,12 @@ jobs:
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Start MongoDB container
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: docker-compose.yml
+        run: docker run -d -p 27017:27017 --name db mongo:4.4.9
       - name: Run integration tests
         run: npm run test-integration --prefix src > reports/integration-test-reports.xml
         continue-on-error: false
       - name: Stop MongoDB container
-        run: docker stop db
+        run: docker-compose -f docker-compose.yml down
       - if: success() || failure()
         name: Upload integration test results
         uses: actions/upload-artifact@v3
@@ -101,10 +99,10 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
-      - name: Install playwright
-        run: npx playwright install
-      - name: Install browsers
-        run: npm playwright install-deps
+      # - name: Install playwright
+      #   run: npx playwright install
+      # - name: Install browsers
+      #   run: npx playwright install-deps
       - name: Start MongoDB container
         run: docker-compose -f docker-compose.yml up -d
       - name: Run end-to-end tests
