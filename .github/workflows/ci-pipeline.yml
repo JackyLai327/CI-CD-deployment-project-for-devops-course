@@ -99,10 +99,10 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
-      # - name: Install playwright
-      #   run: npx playwright install
-      # - name: Install browsers
-      #   run: npx playwright install-deps
+      - name: Install playwright
+        run: npx playwright install
+      - name: Install browsers
+        run: npx playwright install-deps
       - name: Start MongoDB container
         run: docker-compose -f docker-compose.yml up -d
       - name: Run end-to-end tests
