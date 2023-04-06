@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Run linter
@@ -38,10 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
         continue-on-error: false
@@ -68,24 +68,74 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 17.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: '18'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Start MongoDB container
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: docker-compose.yml
+        run: docker run -d -p 27017:27017 --name db mongo:4.4.9
       - name: Run integration tests
         run: npm run test-integration --prefix src > reports/integration-test-reports.xml
         continue-on-error: false
       - name: Stop MongoDB container
-        run: docker stop db
+        run: docker-compose -f docker-compose.yml down
       - if: success() || failure()
         name: Upload integration test results
         uses: actions/upload-artifact@v3
         with:
           name: integration-test-results-${{ github.sha }}
           path: reports/integration-test-reports.xml
+
+  end-to-end-tests:
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm clean-install --prefix src
+      - name: Install playwright
+        run: npx playwright install
+      - name: Install browsers
+        run: npx playwright install-deps
+      - name: Start MongoDB container
+        run: docker-compose -f docker-compose.yml up -d
+      - name: Run end-to-end tests
+        run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
+        continue-on-error: false
+      - name: Stop MongoDB container
+        run: docker-compose -f docker-compose.yml down
+      - if: success() || failure()
+        name: Upload end-to-end test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: end-to-end-test-results-${{ github.sha }}
+          path: reports/end-to-end-test-reports.xml
+
+  build:
+    needs: end-to-end-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm clean-install --prefix src
+      - if: github.ref == 'refs/heads/main' && (success() || failure())
+        name: Create deployable artifact
+        run: npm run pack --prefix src
+      - if: github.ref == 'refs/heads/main' && (success() || failure())
+        name: Upload deployable artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployable-artifact-${{ github.sha }}
+          path: src/*.tgz

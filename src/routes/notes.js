@@ -8,6 +8,12 @@ router.get('/new', (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
+    // added the implementation to save a new note because it wasn't there
+    const note = new Note({
+      title: req.body.title,
+      description: req.body.description,
+    });
+    await note.save();
     res.redirect('/');
   } catch (e) {
     console.log(e);
