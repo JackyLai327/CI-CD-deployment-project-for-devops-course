@@ -106,18 +106,14 @@ jobs:
       - name: Install browsers
         run: npm playwright install-deps
       - name: Start MongoDB container
-        uses: isbang/compose-action@v1.4.1
-        with:
-          compose-file: docker-compose.yml
+        run: docker-compose -f docker-compose.yml up -d
       - name: Run end-to-end tests
         run: npm run test-e2e --prefix src > reports/end-to-end-test-reports.xml
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
         continue-on-error: false
-      - name: Stop application
-        run: npm run stop --prefix src
       - name: Stop MongoDB container
-        run: docker stop db
+        run: docker-compose -f docker-compose.yml down
       - if: success() || failure()
         name: Upload end-to-end test results
         uses: actions/upload-artifact@v3
