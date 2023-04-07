@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 17.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Run linter
@@ -38,10 +38,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 17.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
         continue-on-error: false
@@ -59,10 +59,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 17.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
         continue-on-error: false
@@ -80,10 +80,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 17.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - name: Start MongoDB container
@@ -105,12 +105,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 17.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
+      - name: Install playwright test
+        run: npm install @playwright/test --prefix src
       - name: Install playwright
         run: npx playwright install
       - name: Install browsers
@@ -136,10 +138,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18.x
+      - name: Use Node.js 17.x
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: '17'
       - name: Install dependencies
         run: npm clean-install --prefix src
       - if: github.ref == 'refs/heads/main' && (success() || failure())
