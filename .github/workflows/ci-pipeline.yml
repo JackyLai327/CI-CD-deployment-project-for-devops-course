@@ -53,15 +53,27 @@ jobs:
         with:
           name: unit-test-results-${{ github.sha }}
           path: reports/unit-test-reports.xml
-      - if: github.ref == 'refs/heads/main' && (success() || failure())
-        name: Create deployable artifact
-        run: npm run pack --prefix src
-      - if: github.ref == 'refs/heads/main' && (success() || failure())
-        name: Upload deployable artifact
+    
+  failure-scenario: 
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm clean-install --prefix src
+        continue-on-error: false
+      - name: Run failure scenario
+        run: npm run test-failure --prefix src > reports/failure-scenario-reports.xml
+      - if: success() || failure()
+        name: Upload failure scenario results
         uses: actions/upload-artifact@v3
         with:
-          name: deployable-artifact-${{ github.sha }}
-          path: src/*.tgz
+          name: failure-scenario-results-${{ github.sha }}
+          path: reports/failure-scenario-reports.xml
 
   integration-tests:
     needs: unit-tests
@@ -119,7 +131,7 @@ jobs:
           name: end-to-end-test-results-${{ github.sha }}
           path: reports/end-to-end-test-reports.xml
 
-  build:
+  package-build:
     needs: end-to-end-tests
     runs-on: ubuntu-latest
     steps:

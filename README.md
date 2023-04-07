@@ -133,7 +133,9 @@ name: Packaging
 
 ***
 ## Work flow of CI pipeline:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Here is the work flow of the CI pipeline that could be implemented for Alpine Inc. to solve the problems. In this specific stage of the CI pipeline, no SAST will be implemented. 
 
 <img src="img/ci-pipeline-flow-chart.png" />
 
-***
+
