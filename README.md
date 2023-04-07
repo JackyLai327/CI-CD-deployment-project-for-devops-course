@@ -3,23 +3,6 @@
 - Full Name: Yu-Cheng Lai
 - Student ID: s3878874
 
-### Guidance (remove this section before final submission)
-
-1. Refer for assignment specification `Marking Guide` for details of what should appear in this README.
-
-1. If you do not see an `Actions` tab in your GitHub, email patrick.conheady@rmit.edu.au with URL to your repository, so that it can be enabled.
-
-1. Implement your CI pipeline in the directory `.github/workflows`.
-
-1. Refer to [src/README.md](/src/README.md) for important details on building and testing the application.
-
-1. Commit images to the `img` directory and add them like 
-    ```html
-    <img src="/img/md.png" style="height: 70px;"/>
-    ```
-    <img src="/img/md.png" style="height: 70px;"/>
-
-
 # Analysis and Solution
 ## What's the Big Deal?
 
@@ -59,77 +42,37 @@ To solve this problem and save Alpine Inc. from bad reputation and potential los
 
 ### Linting: 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-It's hard to keep the code style consistent since everyone has their own habits of coding. Linting tools are used to force the developers to code with almost no semantic errors and to keep the code as clean as possible with a consistent style. Since Alpine Inc. uses Node.js as a main tool for the application, ESLint (v8.11.0) can be a great choice. ESLint is a static code analysis tool for identifying problematic patterns found in JavaScript code in order to reduce bugs and complaints. Here's how the CI pipeline runs linting with ESLint:
-```yaml
-name: Linting
-  on: 
-```
+It's hard to keep the code style consistent since everyone has their own habits of coding. Linting tools are used to force the developers to code with almost no semantic errors and to keep the code as clean as possible with a consistent style. Since Alpine Inc. uses Node.js as a main tool for the application, ESLint (v8.11.0) can be a great choice. ESLint is a static code analysis tool for identifying problematic patterns found in JavaScript code in order to reduce bugs and complaints. Here's how GitHub Action is expected to run ESLint:
 
-``` html
-<img src="img/" />
-```
+<img src="img/lint-screenshot.png" />
 
 ### Unit Testing:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-To test all functions individually and ensure that the functions/methods behave as expected, unit testing is an inevitable step. With Node.js we can easily use Jest (v27.5.1) to run unit testing as it works well with Node.js. Jest is a JavaScript testing framework designed to ensure correctness of any JavaScript codebase and can be used with other testing libraries. Here's how the CI pipeline runs unit testing with Jest:
-```yaml
-name: Unit Testing
-  on: [push]
-```
-``` html
-<img src="img/" />
-```
+To test all functions individually and ensure that the functions/methods behave as expected, unit testing is an inevitable step. With Node.js we can easily use Jest (v27.5.1) to run unit testing as it works well with Node.js. Jest is a JavaScript testing framework designed to ensure correctness of any JavaScript codebase and can be used with other testing libraries. Here's how GitHub Action is expected to run Jest unit testing:
+
+<img src="img/unit-tests-screenshot.png" />
 
 ### Static Application Security Testing (SAST):
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Static application security testing (SAST) is a type of application security testing that analyzes application source code to find security vulnerabilities or to protect company secrets before the application is deployed. Since Alpine Inc. uses Node.js, NodeJsScan can be a great choice. NodeJsScan is a static analysis tool for Node.js applications. Here's how the CI pipeline runs SAST with NodeJsScan:
-```yaml
-name: SAST
-  on: [push]
-    branch: [main]
-```
-``` html
-<img src="img/" />
-```
+Static application security testing (SAST) is a type of application security testing that analyzes application source code to find security vulnerabilities or to protect company secrets before the application is deployed. Since Alpine Inc. uses Node.js, NodeJsScan can be a great choice. NodeJsScan is a static analysis tool for Node.js applications. In this stage of the CI pipeline, NodeJsScan will not be implemented/included.
 
 ### Integration Testing:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-To implement integration with the company's main tool, again, Node.js, we can use Jest (v27.5.1) to run integration testing as it works well with Node.js. Jest is a JavaScript testing framework designed to ensure correctness of any JavaScript codebase. Here's how the CI pipeline runs integration testing with Jest:
-```yaml
-name: Integration Testing
-  on: [push]
-    branch: [main]
-    jobs:
-```
-``` html
-<img src="img/" />
-```
+To implement integration with the company's main tool, again, Node.js, we can use Jest (v27.5.1) to run integration testing as it works well with Node.js. Jest is a JavaScript testing framework designed to ensure correctness of any JavaScript codebase. Here's how GitHub Action is expected to run Jest integration testing:
 
+<img src="img/integration-tests-screenshot.png" />
 
 ### End-to-End (E2E) Testing:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Finally, it comes to the last testing phase. To do an E2E testing that simulates the real user's experience from the beginning to the end, playwright can be a great choice. Playwright is a Node.js library which is built to automate the testing of both web and mobile applications. Here's how the CI pipeline runs E2E testing with Playwright:
-```yaml
-name: E2E Testing
-  on: [push]
-    branch: [main]
-    jobs:
-```
-``` html
-<img src="img/" />
-```
+Finally, it comes to the last testing phase. To do an E2E testing that simulates the real user's experience from the beginning to the end, playwright can be a great choice. Playwright is a Node.js library which is built to automate the testing of both web and mobile applications. Here's how GitHub Action is expected to run E2E testing with Playwright:
+
+<img src="img/e2e-tests-screenshot.png" />
 
 ### Packaging:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-For packaging, Node.js can be a great help since it comes with a nice package manger NPM. To package the application and produce a deployable artifact, Alpine Inc. can use GitHub Action (v3) to automate the process. With GitHub Action, Alpine Inc. can easily package the application and produce a deployable artifact. Here's how the CI pipeline runs packaging with GitHub Action:
-```yaml
-name: Packaging
-  on: [push]
-    branch: [main]
-```
-``` html
-<img src="img/" />
-```
+For packaging, Node.js can be a great help since it comes with a nice package manger NPM. To package the application and produce a deployable artifact, Alpine Inc. can use GitHub Action (v3) to automate the process. With GitHub Action, Alpine Inc. can easily package the application and produce a deployable artifact. Here's how GitHub Action is expected to package the application:
+
+<img src="img/package-build-screenshot.png" />
 
 ***
 ## Work flow of CI pipeline:
@@ -137,5 +80,10 @@ name: Packaging
 Here is the work flow of the CI pipeline that could be implemented for Alpine Inc. to solve the problems. In this specific stage of the CI pipeline, no SAST will be implemented. 
 
 <img src="img/ci-pipeline-flow-chart.png" />
+
+If the CI pipeline is implemented correctly, the expected result from GitHub Action should look like this (failure scenario for demonstration purposes only):
+
+<img src="img/workflow-screenshot.png" />
+
 
 
